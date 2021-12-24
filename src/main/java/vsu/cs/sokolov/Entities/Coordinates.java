@@ -1,5 +1,6 @@
 package vsu.cs.sokolov.Entities;
 
+
 import java.util.Objects;
 
 public class Coordinates {
@@ -11,6 +12,34 @@ public class Coordinates {
         this.y = y;
     }
 
+    public Coordinates(Coordinates coordinates) {
+        this.x = coordinates.getX();
+        this.y = coordinates.getY();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        final double EPS = 0.0000001;
+
+        if (this == o) return true;
+        if (!(o instanceof Coordinates that)) return false;
+        return Math.abs(this.getX() - ((Coordinates) o).getX()) < EPS &&
+                Math.abs(this.getY() - ((Coordinates) o).getY()) < EPS;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinates{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
+
     public double getX() {
         return x;
     }
@@ -20,7 +49,7 @@ public class Coordinates {
     }
 
     public static double getLengthBtwn(Coordinates a, Coordinates b) {
-        return Math.sqrt(Math.pow(2, (a.getX() - b.x)) + Math.pow(2, a.y - b.getY()));
+        return Math.sqrt(Math.pow((a.getX() - b.getX()), 2) + Math.pow(a.getY() - b.getY(), 2));
     }
 
 }
