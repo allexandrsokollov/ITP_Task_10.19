@@ -1,8 +1,5 @@
 package vsu.cs.sokolov.Entities;
 
-
-import java.util.Objects;
-
 public class Coordinates {
     private final double x;
     private final double y;
@@ -28,16 +25,15 @@ public class Coordinates {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
-    }
-
-    @Override
     public String toString() {
         return "Coordinates{" +
                 "x=" + x +
                 ", y=" + y +
                 '}';
+    }
+
+    public String toStringDataOnly() {
+        return (x + " " + y);
     }
 
     public double getX() {
@@ -48,7 +44,7 @@ public class Coordinates {
         return y;
     }
 
-    public static double getLengthBtwn(Coordinates a, Coordinates b) {
+    public static double getLengthBetweenCoordinates(Coordinates a, Coordinates b) {
         return Math.sqrt(Math.pow((a.getX() - b.getX()), 2) + Math.pow(a.getY() - b.getY(), 2));
     }
 

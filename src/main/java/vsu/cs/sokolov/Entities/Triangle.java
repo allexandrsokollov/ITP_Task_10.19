@@ -1,14 +1,21 @@
 package vsu.cs.sokolov.Entities;
 
 
+import vsu.cs.sokolov.FileHandler.FileWriter;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Triangle {
-    private final Coordinates a;
-    private final Coordinates b;
-    private final Coordinates c;
+    private Coordinates a;
+    private Coordinates b;
+    private Coordinates c;
+
+    public Triangle() {}
 
     public Triangle(Coordinates a, Coordinates b, Coordinates c) {
         this.a = a;
@@ -73,17 +80,78 @@ public class Triangle {
         return coefficientOfCongruence >= 6;
     }
 
-    private ArrayList<Double> getRatios () {
-        ArrayList<Double> ratios = new ArrayList<>();
+    public static List<Triangle> getListTriangleFromStringArr (String[] strArr) throws IOException {
 
-        ratios.add(Coordinates.getLengthBtwn(a, b) / Coordinates.getLengthBtwn(b, c));
-        ratios.add(Coordinates.getLengthBtwn(a, b) / Coordinates.getLengthBtwn(c, a));
-        ratios.add(Coordinates.getLengthBtwn(b, c) / Coordinates.getLengthBtwn(c, a));
-        ratios.add(Coordinates.getLengthBtwn(b, c) / Coordinates.getLengthBtwn(a, b));
-        ratios.add(Coordinates.getLengthBtwn(c, a) / Coordinates.getLengthBtwn(a, b));
-        ratios.add(Coordinates.getLengthBtwn(c, a) / Coordinates.getLengthBtwn(b, c));
+        List<Triangle> triangles = new ArrayList<>();
 
-        return ratios;
+        for (String str : strArr) {
+            triangles.add(getTriangleFromString(str));
+        }
+
+        return triangles;
+    }
+
+    public static Triangle getTriangleFromString (String str) throws IOException {
+        Scanner scanner = new Scanner(str);
+        Triangle triangle = new Triangle();
+        List<Double> doubles = new ArrayList<>();
+
+        while (scanner.hasNextLine()) {
+            if (scanner.hasNextDouble()) {
+                doubles.add(scanner.nextDouble());
+                continue;
+            }
+            if (scanner.hasNextInt()) {
+                doubles.add((double) scanner.nextInt());
+            }
+        }
+
+        if (doubles.size() != 6) {
+            throw new IOException("Can not convert String to Triangle");
+        }
+
+        triangle.setA(new Coordinates(doubles.get(0), doubles.get(1)));
+        triangle.setB(new Coordinates(doubles.get(2), doubles.get(3)));
+        triangle.setC(new Coordinates(doubles.get(4), doubles.get(5)));
+
+        return triangle;
+
+    }
+
+    public static String[] listToStringArr (List<Triangle> triangles) {
+        int trianglesAmount = triangles.size();
+        String[] result = new String[trianglesAmount];
+
+        for (int i = 0; i < trianglesAmount; i++) {
+            result[i] = (triangles.get(i).getA().toStringDataOnly() + " " +
+                    triangles.get(i).getB().toStringDataOnly() + " " +
+                    triangles.get(i).getC().toStringDataOnly());
+        }
+
+        return result;
+    }
+
+    public static void writeListOfListsOfTrianglesToFile (File file, List<List<Triangle>> listListTriangles) throws IOException {
+        String divider = ("------------------------------------------------------");
+        for (List<Triangle> triangles : listListTriangles) {
+            for (Triangle t : triangles) {
+                FileWriter.writeStringToFile(file, t.toStringDataOnly());
+            }
+            FileWriter.writeStringToFile(file, divider);
+        }
+
+    }
+
+    public static void writeListOfListsOfTrianglesToFile (String fileName, String filePath,
+                                                          List<List<Triangle>> listListTriangles) throws IOException {
+        String divider = ("------------------------------------------------------");
+        for (List<Triangle> triangles : listListTriangles) {
+            for (Triangle t : triangles) {
+                FileWriter.writeStringToFile(fileName, filePath, t.toStringDataOnly());
+            }
+            FileWriter.writeStringToFile(fileName, filePath, divider);
+        }
+
     }
 
     public Coordinates getA() {
@@ -96,6 +164,18 @@ public class Triangle {
 
     public Coordinates getC() {
         return c;
+    }
+
+    public void setA(Coordinates a) {
+        this.a = a;
+    }
+
+    public void setB(Coordinates b) {
+        this.b = b;
+    }
+
+    public void setC(Coordinates c) {
+        this.c = c;
     }
 
     @Override
@@ -117,5 +197,24 @@ public class Triangle {
                 ", b=" + b +
                 ", c=" + c +
                 '}';
+    }
+
+    public String toStringDataOnly() {
+        return getA().toStringDataOnly() + " " +
+                getB().toStringDataOnly() + " " +
+                getC().toStringDataOnly();
+    }
+
+    private ArrayList<Double> getRatios () {
+        ArrayList<Double> ratios = new ArrayList<>();
+
+        ratios.add(Coordinates.getLengthBetweenCoordinates(a, b) / Coordinates.getLengthBetweenCoordinates(b, c));
+        ratios.add(Coordinates.getLengthBetweenCoordinates(a, b) / Coordinates.getLengthBetweenCoordinates(c, a));
+        ratios.add(Coordinates.getLengthBetweenCoordinates(b, c) / Coordinates.getLengthBetweenCoordinates(c, a));
+        ratios.add(Coordinates.getLengthBetweenCoordinates(b, c) / Coordinates.getLengthBetweenCoordinates(a, b));
+        ratios.add(Coordinates.getLengthBetweenCoordinates(c, a) / Coordinates.getLengthBetweenCoordinates(a, b));
+        ratios.add(Coordinates.getLengthBetweenCoordinates(c, a) / Coordinates.getLengthBetweenCoordinates(b, c));
+
+        return ratios;
     }
 }
