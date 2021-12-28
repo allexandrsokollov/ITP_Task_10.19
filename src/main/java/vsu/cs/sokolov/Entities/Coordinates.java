@@ -45,6 +45,7 @@ public class Coordinates {
     }
 
     public static double getLengthBetweenCoordinates(Coordinates a, Coordinates b) {
+
         return Math.sqrt(Math.pow((a.getX() - b.getX()), 2) + Math.pow(a.getY() - b.getY(), 2));
     }
 

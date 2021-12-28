@@ -96,14 +96,8 @@ public class Triangle {
         Triangle triangle = new Triangle();
         List<Double> doubles = new ArrayList<>();
 
-        while (scanner.hasNextLine()) {
-            if (scanner.hasNextDouble()) {
-                doubles.add(scanner.nextDouble());
-                continue;
-            }
-            if (scanner.hasNextInt()) {
-                doubles.add((double) scanner.nextInt());
-            }
+        while (scanner.hasNextDouble()) {
+            doubles.add(scanner.nextDouble());
         }
 
         if (doubles.size() != 6) {
@@ -144,14 +138,19 @@ public class Triangle {
 
     public static void writeListOfListsOfTrianglesToFile (String fileName, String filePath,
                                                           List<List<Triangle>> listListTriangles) throws IOException {
-        String divider = ("------------------------------------------------------");
+        String divider = ("-------------------------------");
+        StringBuilder stringBuilder = new StringBuilder();
         for (List<Triangle> triangles : listListTriangles) {
             for (Triangle t : triangles) {
-                FileWriter.writeStringToFile(fileName, filePath, t.toStringDataOnly());
+                stringBuilder.append(t.toStringDataOnly());
+                stringBuilder.append('\n');
+
             }
-            FileWriter.writeStringToFile(fileName, filePath, divider);
+            stringBuilder.append(divider).append('\n');
+
         }
 
+        FileWriter.writeStringToFile(fileName, filePath, String.valueOf(stringBuilder));
     }
 
     public Coordinates getA() {
